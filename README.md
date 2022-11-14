@@ -48,6 +48,7 @@ Note: Anh Thái: A thấy bài này thì pretrained model + CRF là ok r. Thi th
 │       config.py - configuration
 │
 ├───data - default directory for storing input data
+│   └───eBay_ML_Challenge_Dataset_2022 - all unzipped data in this folder (.tsv files)
 │
 ├───data_loader - anything about data loading
 │       data_loaders.py
