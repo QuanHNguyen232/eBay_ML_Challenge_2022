@@ -2,6 +2,15 @@
 
 Link: [https://eval.ai/web/challenges/challenge-page/1733/overview](https://eval.ai/web/challenges/challenge-page/1733/overview)
 
+11/14/2022: Preprocessing NLP (cleaning)
+    * https://realpython.com/natural-language-processing-spacy-python/
+    * https://iq.opengenus.org/text-preprocessing-in-spacy/
+    * https://medium.com/voice-tech-podcast/implementing-a-simple-text-preprocessing-pipeline-with-spacy-597a3568bc19
+    * https://towardsdatascience.com/text-cleaning-for-nlp-in-python-2716be301d5d
+
+11/13/2022: Check aio2022 record 11-12-2022 (basic tokenize)
+    * check spell, etc.
+
 Src (11/1/2022):
 1. https://pytorch.org/hub/pytorch_fairseq_roberta/ (RoBERTa)
     * https://github.com/facebookresearch/fairseq
