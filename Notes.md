@@ -1,10 +1,11 @@
 11/16/2022: Youtube tutorial
-* [Fine Tuning BERT for Named Entity Recognition (NER)](https://www.youtube.com/watch?v=dzyDHMycx_c)
-* [Train Custom NAMED ENTITY RECOGNITION (NER) model using BERT](https://www.youtube.com/watch?v=uKPBkendlxw)
-* [How to Train a spaCy NER model (Named Entity Recognition for DH 04 | Part 03)](https://www.youtube.com/watch?v=7Z1imsp6g10&list=PL2VXyKi-KpYs1bSnT8bfMFyGS-wMcjesM&index=6)
-* [Building an entity extraction model using BERT](https://www.youtube.com/watch?v=MqQ7rqRllIc)
+* Useful:
+    * [Fine Tuning BERT for Named Entity Recognition (NER)](https://www.youtube.com/watch?v=dzyDHMycx_c)
+    * [Named Entity Recognition NER using spaCy - Extracting Subject Verb Action](https://www.youtube.com/watch?v=TxTxWAohW7E&list=PLxqBkZuBynVTn2lkHNAcw6lgm1MD5QiMK&index=6)
+    * [Building an entity extraction model using BERT](https://www.youtube.com/watch?v=MqQ7rqRllIc)
+    * [How to Train a spaCy NER model (Named Entity Recognition for DH 04 | Part 03)](https://www.youtube.com/watch?v=7Z1imsp6g10&list=PL2VXyKi-KpYs1bSnT8bfMFyGS-wMcjesM&index=6)
 * [Named Entity Recognition - Natural Language Processing With Python and NLTK p.7](https://www.youtube.com/watch?v=LFXsG7fueyk)
-
+* [Train Custom NAMED ENTITY RECOGNITION (NER) model using BERT](https://www.youtube.com/watch?v=uKPBkendlxw) (use weird library)
 
 11/15/2022: may need both NER and POS
 * NEED: read RoBERTa paper, learn how to train w/ custom labels
