@@ -1,5 +1,6 @@
 # eBay-ML-Challenge-2022 ([info](https://eval.ai/web/challenges/challenge-page/1733/overview))
 
+https://paperswithcode.com/sota/named-entity-recognition-ner-on-conll-2003 -> BERT+CRF: https://paperswithcode.com/paper/focusing-on-possible-named-entities-in-active
 
 ---
 ## Folder Structure
