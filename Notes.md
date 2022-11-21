@@ -1,3 +1,13 @@
+11/21/2022: Apply CRF in NER:
+* https://paperswithcode.com/sota/named-entity-recognition-ner-on-conll-2003
+        -> BERT+CRF: https://paperswithcode.com/paper/focusing-on-possible-named-entities-in-active
+* https://www.nexsoftsys.com/articles/overview-of-named-entity-recognition-using-crf.html
+* https://towardsdatascience.com/conditional-random-fields-explained-e5b8256da776
+* https://datajello.com/nlp-tutorial-named-entity-recognition-using-lstm-and-crf/
+* https://medium.com/data-science-in-your-pocket/named-entity-recognition-ner-using-conditional-random-fields-in-nlp-3660df22e95c
+* https://www.depends-on-the-definition.com/named-entity-recognition-conditional-random-fields-python/
+
+
 11/16/2022: Youtube tutorial
 * Useful:
     * [Fine Tuning BERT for Named Entity Recognition (NER)](https://www.youtube.com/watch?v=dzyDHMycx_c)

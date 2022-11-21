@@ -1,14 +1,6 @@
 # eBay-ML-Challenge-2022 ([info](https://eval.ai/web/challenges/challenge-page/1733/overview))
 
-https://paperswithcode.com/sota/named-entity-recognition-ner-on-conll-2003
-        -> BERT+CRF: https://paperswithcode.com/paper/focusing-on-possible-named-entities-in-active
-
-Apply CRF in NER:
-* https://www.nexsoftsys.com/articles/overview-of-named-entity-recognition-using-crf.html
-* https://towardsdatascience.com/conditional-random-fields-explained-e5b8256da776
-* https://datajello.com/nlp-tutorial-named-entity-recognition-using-lstm-and-crf/
-        
----
+pi---
 ## Folder Structure
 ```
 .

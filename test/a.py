@@ -1,6 +1,5 @@
 #%%
 from collections import OrderedDict
-from turtle import forward
 import torch
 import timm
 
@@ -62,7 +61,7 @@ for layer in model.modules():
 
 class MyModel(torch.nn.Module):
     def __init__(self) -> None:
-        super().__init__()
+        super(MyModel, self).__init__()
         self.blck = torch.nn.Sequential(
                 torch.nn.Conv2d(in_channels=3, out_channels=16,
                             kernel_size=3, stride=1, padding=1),
@@ -77,3 +76,6 @@ class MyModel(torch.nn.Module):
         #         'linear1' : torch.nn.Linear(in_features=16*28*28, out_features=1)
         # }))
 
+
+test_model = MyModel()
+test_model
