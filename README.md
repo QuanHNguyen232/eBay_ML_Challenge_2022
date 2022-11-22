@@ -1,6 +1,6 @@
 # eBay-ML-Challenge-2022 ([info](https://eval.ai/web/challenges/challenge-page/1733/overview))
 
-pi---
+
 ## Folder Structure
 ```
 .
