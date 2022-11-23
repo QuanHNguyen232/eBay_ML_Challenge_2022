@@ -1,3 +1,6 @@
+11/22/2022: better info for finetune BERT/RoBERTa:
+* [towards-data-science](https://towardsdatascience.com/fine-tuning-bert-for-text-classification-54e7df642894) -> use [torch-hub models](https://pytorch.org/hub/huggingface_pytorch-transformers/)
+
 11/21/2022: Apply CRF in NER:
 * https://paperswithcode.com/sota/named-entity-recognition-ner-on-conll-2003
         -> BERT+CRF: https://paperswithcode.com/paper/focusing-on-possible-named-entities-in-active
@@ -40,18 +43,18 @@ Src (11/1/2022):
     * https://github.com/facebookresearch/fairseq
         * https://github.com/facebookresearch/fairseq/blob/main/examples/roberta/README.md
         * https://github.com/facebookresearch/fairseq/blob/main/examples/roberta/README.pretraining.md
-1. Huggingface-Transformers (RoBERTa):
+<!-- 1. Huggingface-Transformers (RoBERTa):
     * https://github.com/huggingface/transformers/tree/77321481247787c97568c3b9f64b19e22351bab8
-    * https://huggingface.co/docs/transformers/v4.24.0/en/model_doc/roberta#transformers.RobertaForTokenClassification
-1. DeBERTa:
-    * https://github.com/microsoft/DeBERTa
+    * https://huggingface.co/docs/transformers/v4.24.0/en/model_doc/roberta#transformers.RobertaForTokenClassification -->
+<!-- 1. DeBERTa:
+    * https://github.com/microsoft/DeBERTa -->
 1. Paper:
     * https://arxiv.org/abs/1907.11692
 1. NER with BERT:
     * https://towardsdatascience.com/named-entity-recognition-with-bert-in-pytorch-a454405e0b6a
 1. NER with RoBERTa:
     * https://www.kaggle.com/code/eriknovak/pytorch-roberta-named-entity-recognition
-    * https://github.com/code2ashish/Name-Entity-Recognition-BERT-distilBERT-RoBERTa
+    <!-- * https://github.com/code2ashish/Name-Entity-Recognition-BERT-distilBERT-RoBERTa -->
 
 Note: Anh Thái: A thấy bài này thì pretrained model + CRF là ok r. Thi thì thêm ensemble nữa. ensemble pre trained model (như RoBERTa, DeBERTa,... này nọ)
 1. https://towardsdatascience.com/named-entity-recognition-ner-with-bert-in-spark-nlp-874df20d1d77
