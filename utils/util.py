@@ -10,7 +10,7 @@ sys.path.append('../')
 import testing.EDA as eda
 import config.config as cfg
 
-def get_data(isUnCase=True, rm_punc=True, rm_word_symbol=False):
+def get_data(isUnCase=True, rm_punc=True, rm_word_symbol=True):
     # isCase: Case sentitive (english != English): "roberta-large"
     # isUnCase: bert-base-uncased or Jean-Baptiste/roberta-large-ner-english
 
@@ -52,6 +52,7 @@ def get_data(isUnCase=True, rm_punc=True, rm_word_symbol=False):
         'label2id': label2id,
         'id2label': id2label
     }
+
 
 def emoji_remove(text):
     ''' use for inference (run on eval mode)

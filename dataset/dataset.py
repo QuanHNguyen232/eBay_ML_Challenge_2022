@@ -6,7 +6,7 @@ sys.path.append('../')
 import utils.util as util
 import config.config as cfg
 
-class MyData(torch.utils.data.Dataset):
+class MyDataset(torch.utils.data.Dataset):
     def __init__(self, sentences, labels, label_all_tokens=cfg.TOKENIZER.label_all_tokens):
         self.sentences = sentences
         self.labels = labels
@@ -21,10 +21,17 @@ class MyData(torch.utils.data.Dataset):
         text = ' '.join(self.sentences[index])
         label = self.labels[index]
 
-        text_tokenized = self.tokenizer(text, padding='max_length', max_length=512, truncation=True, return_tensors="pt")  # only for xxxTokenizerFast
+        text_tokenized = self.tokenizer(text, padding='max_length', max_length=cfg.MAX_SIZE, truncation=True, return_tensors="pt")  # only for xxxTokenizerFast
         new_label = self.align_label(text_tokenized, label)
         new_label = torch.Tensor(new_label)
-        return text_tokenized.to(cfg.DEVICE), new_label.to(cfg.DEVICE)
+        
+        return {
+            'input_ids': text_tokenized.input_ids.squeeze().type(torch.LongTensor).to(cfg.DEVICE),
+            'token_type_ids': text_tokenized.token_type_ids.squeeze().type(torch.LongTensor).to(cfg.DEVICE),
+            'attention_mask': text_tokenized.attention_mask.squeeze().type(torch.LongTensor).to(cfg.DEVICE),
+            'target_tag': new_label.squeeze().type(torch.LongTensor).to(cfg.DEVICE)
+        }
+        # return text_tokenized.to(cfg.DEVICE), new_label.to(cfg.DEVICE)
 
     def align_label(self, text_tokenized, labels):
         word_ids = text_tokenized.word_ids()    # only for xxxTokenizerFast
