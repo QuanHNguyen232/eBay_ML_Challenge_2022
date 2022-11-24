@@ -10,7 +10,7 @@ sys.path.append('../')
 import testing.EDA as eda
 import config.config as cfg
 
-def get_data(isUnCase=True):
+def get_data(isUnCase=True, rm_punc=True, rm_word_symbol=False):
     # isCase: Case sentitive (english != English): "roberta-large"
     # isUnCase: bert-base-uncased or Jean-Baptiste/roberta-large-ner-english
 
@@ -34,15 +34,16 @@ def get_data(isUnCase=True):
         remove_i = []
         for idx, _ in enumerate(sentence):
             if isUnCase: sentence[idx] = sentence[idx].lower()
-            if sentence[idx] in string.punctuation+'--': remove_i.append(idx)
+            if rm_punc and sentence[idx] in string.punctuation+'--': remove_i.append(idx)
         
         sentences[i] = np.delete(sentence, remove_i)
         labels[i] = np.delete(label, remove_i)
         tags[i] = np.delete(tag, remove_i)
 
         # word level (multi-color -> multicolor)
-        for idx, _ in enumerate(sentences[i]):
-            sentences[i][idx] = re.sub(r"(@\[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|^rt|http.+?", "", sentences[i][idx])
+        if rm_word_symbol:
+            for idx, _ in enumerate(sentences[i]):
+                sentences[i][idx] = re.sub(r"(@\[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|^rt|http.+?", "", sentences[i][idx])
     
     return {
         'sentences': sentences,
@@ -51,3 +52,30 @@ def get_data(isUnCase=True):
         'label2id': label2id,
         'id2label': id2label
     }
+
+def emoji_remove(text):
+    ''' use for inference (run on eval mode)
+
+    NEED CHECK IF '-' RETURNS 'no-tag'
+    '''
+    emoji_pattern = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        u"\U00002500-\U00002BEF"  # chinese char
+        u"\U00002702-\U000027B0"
+        u"\U00002702-\U000027B0"
+        u"\U000024C2-\U0001F251"
+        u"\U0001f926-\U0001f937"
+        u"\U00010000-\U0010ffff"
+        u"\u2640-\u2642" 
+        u"\u2600-\u2B55"
+        u"\u200d"
+        u"\u23cf"
+        u"\u23e9"
+        u"\u231a"
+        u"\ufe0f"  # dingbats
+        u"\u3030"
+        "]+", re.UNICODE)
+    return emoji_pattern.sub(r'-', text)

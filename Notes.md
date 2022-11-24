@@ -1,3 +1,7 @@
+11/24/2022:
+* Add CRF: https://github.com/SenseKnowledge/pytorch-NER
+* Try LUKE instead of RoBERTa ([huggingface](https://huggingface.co/docs/transformers/model_doc/luke#transformers.LukeModel)) - rank 6 on [CoNLL2003](https://paperswithcode.com/sota/named-entity-recognition-ner-on-conll-2003)
+
 11/22/2022: better info for finetune BERT/RoBERTa:
 * [towards-data-science](https://towardsdatascience.com/fine-tuning-bert-for-text-classification-54e7df642894) -> use [torch-hub models](https://pytorch.org/hub/huggingface_pytorch-transformers/)
 
@@ -7,7 +11,7 @@
 * https://www.nexsoftsys.com/articles/overview-of-named-entity-recognition-using-crf.html
 * https://towardsdatascience.com/conditional-random-fields-explained-e5b8256da776
 * https://datajello.com/nlp-tutorial-named-entity-recognition-using-lstm-and-crf/
-* https://medium.com/data-science-in-your-pocket/named-entity-recognition-ner-using-conditional-random-fields-in-nlp-3660df22e95c
+* [Named Entity Recognition(NER) using Conditional Random Fields (CRFs)in NLP](https://medium.com/data-science-in-your-pocket/named-entity-recognition-ner-using-conditional-random-fields-in-nlp-3660df22e95c) -> [Training custom NER system using CRFs](https://medium.com/data-science-in-your-pocket/training-custom-ner-system-using-crfs-146e0e922851)
 * https://www.depends-on-the-definition.com/named-entity-recognition-conditional-random-fields-python/
 
 
