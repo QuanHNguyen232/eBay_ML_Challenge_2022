@@ -15,10 +15,9 @@ from testing.engine import train_fn, eval_fn
 sentences, labels, tags, label2id, id2label = get_data()
 num_tags = len(list(cfg.encode_tag.classes_))
 
-split_pt = 4000
-train_sentences, test_sentences = sentences[:split_pt], sentences[split_pt:]
-train_labels, test_labels = labels[:split_pt], labels[split_pt:]
-train_tags, test_tags = tags[:split_pt], tags[split_pt:]
+train_sentences, test_sentences = sentences[:cfg.split_pt], sentences[cfg.split_pt:]
+train_labels, test_labels = labels[:cfg.split_pt], labels[cfg.split_pt:]
+train_tags, test_tags = tags[:cfg.split_pt], tags[cfg.split_pt:]
 print('data created')
 
 train_dataset = MyDataset(train_sentences, train_labels)
@@ -29,28 +28,31 @@ train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=cfg.BAT
 valid_dataloader = torch.utils.data.DataLoader(valid_dataset, batch_size=cfg.BATCH_SIZE)
 print('dataloader created')
 
-model = models.BERTModel(num_tags)
+# model = models.BERTModel(num_tags, isFreeze=False)
+# model = models.RoBERTa_BiLSTM_CRF_Model(num_tags)
+model = models.RoBERTa_BiLSTM_Model(num_tags, isFreeze=False)
 model = model.to(cfg.DEVICE)
 print('model created')
 
-optimizer, scheduler = get_optimizer_scheduler(model, train_sentences)
+# optimizer, scheduler = get_optimizer_scheduler(model, train_sentences)
+optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.LR)
 print('optimizer & scheduler created')
 
 best_train_loss = np.inf
 best_valid_loss = np.inf
 history = defaultdict(list)
-
 for epoch in range(cfg.EPOCHS):
-    train_loss = train_fn(train_dataloader, model, optimizer, scheduler)
+    train_loss = train_fn(train_dataloader, model, optimizer, scheduler=None)
     valid_loss = eval_fn(valid_dataloader, model)
     history['train_loss'].append(train_loss)
     history['valid_loss'].append(valid_loss)
 
     print(f"EPOCH = {epoch} \t train_loss = {train_loss} \t valid_loss = {valid_loss}")
 
+    isFrz = 'frz' if model.isFreeze else 'unfrz'
     if train_loss < best_train_loss:
-        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{model.model_name}_epoch{epoch}_bacth{cfg.BATCH_SIZE}_best_train.pt'))
+        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{model.model_name}_{isFrz}_epoch{epoch}_batch{cfg.BATCH_SIZE}_train.pt'))
         best_train_loss = train_loss
     if valid_loss < best_valid_loss:
-        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{model.model_name}_epoch{epoch}_bacth{cfg.BATCH_SIZE}_best_valid.pt'))
+        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{model.model_name}_{isFrz}_epoch{epoch}_batch{cfg.BATCH_SIZE}_valid.pt'))
         best_valid_loss = valid_loss

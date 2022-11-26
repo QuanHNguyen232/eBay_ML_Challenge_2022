@@ -6,6 +6,8 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import torch
+import transformers
 
 import sys
 sys.path.append('../')
@@ -41,3 +43,8 @@ word_counts.hist(bins=50, figsize=(8,6));
 #%%
 def test_file():
     print('file test/EDA.py')
+
+
+#%%
+model = transformers.BertModel.from_pretrained('Jean-Baptiste/roberta-large-ner-english')
+model

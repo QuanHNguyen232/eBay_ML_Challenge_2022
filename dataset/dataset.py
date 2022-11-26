@@ -3,7 +3,7 @@ import transformers
 
 import sys
 sys.path.append('../')
-import utils.util as util
+from utils.util import get_data
 import config.config as cfg
 
 class MyDataset(torch.utils.data.Dataset):
@@ -21,7 +21,7 @@ class MyDataset(torch.utils.data.Dataset):
         text = ' '.join(self.sentences[index])
         label = self.labels[index]
 
-        text_tokenized = self.tokenizer(text, padding='max_length', max_length=cfg.MAX_SIZE, truncation=True, return_tensors="pt")  # only for xxxTokenizerFast
+        text_tokenized = self.tokenizer(text, padding='max_length', max_length=cfg.TOKENIZER.MAX_SIZE, truncation=True, return_tensors="pt")  # only for xxxTokenizerFast
         new_label = self.align_label(text_tokenized, label)
         new_label = torch.Tensor(new_label)
         
@@ -31,40 +31,25 @@ class MyDataset(torch.utils.data.Dataset):
             'attention_mask': text_tokenized.attention_mask.squeeze().type(torch.LongTensor).to(cfg.DEVICE),
             'target_tag': new_label.squeeze().type(torch.LongTensor).to(cfg.DEVICE)
         }
-        # return text_tokenized.to(cfg.DEVICE), new_label.to(cfg.DEVICE)
 
     def align_label(self, text_tokenized, labels):
         word_ids = text_tokenized.word_ids()    # only for xxxTokenizerFast
         previous_word_idx = None
         label_ids = []
+        # special_tk_tag = list(cfg.encode_tag.classes_).index('No Tag')
+        special_tk_tag = -100
         
         for word_idx in word_ids:
             if word_idx is None:  # Set the special tokens to -100.
-                label_ids.append(-100)
+                label_ids.append(special_tk_tag)
             elif word_idx != previous_word_idx: # Only label the first token of a given word.
                 try:
                     label_ids.append(labels[word_idx])
                 except:
-                    label_ids.append(-100)
+                    label_ids.append(special_tk_tag)
             else:
-                label_ids.append(labels[word_idx] if self.label_all_tokens else -100)
+                label_ids.append(labels[word_idx] if self.label_all_tokens else special_tk_tag)
             
             previous_word_idx = word_idx
         
         return label_ids
-
-
-#### UNIT TEST ###
-# data = util.get_data()
-# print(data['num_labels'], len(cfg.encode_tag.classes_))
-# sentences, labels = data['sentences'], data['labels']
-# dataset = MyData(sentences, labels)
-# print('len dataset',len(dataset))
-
-# dataloader = torch.utils.data.DataLoader(dataset, batch_size=32)
-# for data, label in dataloader:
-#   break
-
-# print(data.input_ids.shape, data.token_type_ids.shape, data.attention_mask.shape, label.shape)
-# print(type(data.input_ids), type(data.token_type_ids), type(data.attention_mask), type(label))
-# print(data.input_ids.device, data.token_type_ids.device, data.attention_mask.device, label.device)

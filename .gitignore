@@ -131,3 +131,4 @@ dmypy.json
 # Quan add
 data/**
 **.pt
+**.zip

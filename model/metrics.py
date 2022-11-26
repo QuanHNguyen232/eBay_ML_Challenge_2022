@@ -25,9 +25,9 @@ def get_optimizer_scheduler(model, sentences):
             },
         ]
     
-    optimizer = AdamW(optimizer_parameters, lr=3e-5)
+    optimizer = AdamW(optimizer_parameters, lr=cfg.LR)
     
-    num_train_steps = int(len(sentences) / 32 * cfg.EPOCHS)
-    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=num_train_steps)
+    num_train_steps = int(len(sentences) / cfg.BATCH_SIZE * cfg.EPOCHS)
+    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=cfg.num_warmup_steps, num_training_steps=num_train_steps)
 
     return optimizer, scheduler

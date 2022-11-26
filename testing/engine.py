@@ -14,7 +14,7 @@ import config.config as cfg
 
 
 
-def train_fn(data_loader, model, optimizer, scheduler):
+def train_fn(data_loader, model, optimizer, scheduler=None):
     model.train()
     total_loss = 0.0
   
@@ -24,7 +24,8 @@ def train_fn(data_loader, model, optimizer, scheduler):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        scheduler.step()
+        if scheduler != None:
+            scheduler.step()
 
         total_loss += loss.item()
         
