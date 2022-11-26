@@ -36,8 +36,8 @@ class MyDataset(torch.utils.data.Dataset):
         word_ids = text_tokenized.word_ids()    # only for xxxTokenizerFast
         previous_word_idx = None
         label_ids = []
-        # special_tk_tag = list(cfg.encode_tag.classes_).index('No Tag')
-        special_tk_tag = -100
+        special_tk_tag = list(cfg.encode_tag.classes_).index('No Tag')
+        # special_tk_tag = -100
         
         for word_idx in word_ids:
             if word_idx is None:  # Set the special tokens to -100.

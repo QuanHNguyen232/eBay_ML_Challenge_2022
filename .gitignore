@@ -129,6 +129,8 @@ dmypy.json
 .pyre/
 
 # Quan add
-data/**
 **.pt
 **.zip
+data/eBay_ML_Challenge_Dataset_2022/Annexure.pdf
+**.tsv
+**.gz

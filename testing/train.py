@@ -50,9 +50,10 @@ for epoch in range(cfg.EPOCHS):
     print(f"EPOCH = {epoch} \t train_loss = {train_loss} \t valid_loss = {valid_loss}")
 
     isFrz = 'frz' if model.isFreeze else 'unfrz'
+    filename = f'{model.model_name}_{isFrz}_epo{epoch}_batch{cfg.BATCH_SIZE}_lr{str(cfg.LR)}'
     if train_loss < best_train_loss:
-        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{model.model_name}_{isFrz}_epoch{epoch}_batch{cfg.BATCH_SIZE}_train.pt'))
+        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{filename}_train.pt'))
         best_train_loss = train_loss
     if valid_loss < best_valid_loss:
-        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{model.model_name}_{isFrz}_epoch{epoch}_batch{cfg.BATCH_SIZE}_valid.pt'))
+        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{filename}_valid.pt'))
         best_valid_loss = valid_loss
