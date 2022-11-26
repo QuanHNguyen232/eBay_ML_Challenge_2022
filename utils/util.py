@@ -7,13 +7,9 @@ import pandas as pd
 
 import sys
 sys.path.append('../')
-import testing.EDA as eda
 import config.config as cfg
 
-def get_data(isUnCase=True, rm_punc=True, rm_word_symbol=True):
-    # isCase: Case sentitive (english != English): "roberta-large"
-    # isUnCase: bert-base-uncased or Jean-Baptiste/roberta-large-ner-english
-
+def load_data():
     file_path = os.path.join(cfg.DATA_DIR, cfg.TRAIN_DATA)
     df = pd.read_csv(file_path, sep="\t", dtype=str, keep_default_na=False, na_values=[""], quoting=csv.QUOTE_NONE)
     df = df.fillna(method="ffill")
@@ -28,6 +24,12 @@ def get_data(isUnCase=True, rm_punc=True, rm_word_symbol=True):
     sentences = df.groupby("Record Number")["Token"].apply(list).values
     labels = df.groupby("Record Number")["Label"].apply(list).values
     tags = df.groupby("Record Number")["Tag"].apply(list).values
+
+    return sentences, labels, tags, label2id, id2label
+
+def preprocess(sentences, labels, tags, isUnCase=True, rm_punc=True, rm_word_symbol=True):
+    # isCase: Case sentitive (english != English): "roberta-large"
+    # isUnCase: bert-base-uncased or Jean-Baptiste/roberta-large-ner-english
 
     for i, (sentence, label, tag) in enumerate(zip(sentences, labels, tags)):
         # word level: remove punctuation
@@ -45,13 +47,13 @@ def get_data(isUnCase=True, rm_punc=True, rm_word_symbol=True):
             for idx, _ in enumerate(sentences[i]):
                 sentences[i][idx] = re.sub(r"(@\[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|^rt|http.+?", "", sentences[i][idx])
     
-    return {
-        'sentences': sentences,
-        'labels': labels,
-        'tags': tags,
-        'label2id': label2id,
-        'id2label': id2label
-    }
+    return sentences, labels, tags
+
+def get_data():
+    sentences, labels, tags, label2id, id2label = load_data()
+    sentences, labels, tags = preprocess(sentences, labels, tags)
+
+    return sentences, labels, tags, label2id, id2label
 
 
 def emoji_remove(text):

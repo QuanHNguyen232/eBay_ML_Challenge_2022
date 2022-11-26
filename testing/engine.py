@@ -15,22 +15,37 @@ import config.config as cfg
 
 
 def train_fn(data_loader, model, optimizer, scheduler):
-    model = model.to(cfg.DEVICE)
     model.train()
     total_loss = 0.0
   
     for data in tqdm(data_loader):
-        # optimizer.zero_grad()
         out, loss = model(data['input_ids'], data['attention_mask'], data['token_type_ids'], data['target_tag'])
         
+        optimizer.zero_grad()
         loss.backward()
-        # optimizer.step()
-        # scheduler.step()
+        optimizer.step()
+        scheduler.step()
 
         total_loss += loss.item()
         
         del data
         gc.collect()
         torch.cuda.empty_cache()
+    
+    return total_loss / len(data_loader)
+
+def eval_fn(data_loader, model):
+    model.eval()
+    total_loss = 0.0
+  
+    with torch.no_grad():
+        for data in tqdm(data_loader):
+            out, loss = model(data['input_ids'], data['attention_mask'], data['token_type_ids'], data['target_tag'])
+            
+            total_loss += loss.item()
+            
+            del data
+            gc.collect()
+            torch.cuda.empty_cache()
     
     return total_loss / len(data_loader)
