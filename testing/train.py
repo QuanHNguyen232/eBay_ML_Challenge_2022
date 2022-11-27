@@ -1,4 +1,5 @@
 import os
+import gc
 import torch
 import numpy as np
 from collections import defaultdict
@@ -7,7 +8,7 @@ import sys
 sys.path.append('../')
 import config.config as cfg
 import model.models as models
-from utils.util import get_data
+from utils.util import get_data, save_train_log
 from model.metrics import get_optimizer_scheduler
 from dataset.dataset import MyDataset
 from testing.engine import train_fn, eval_fn
@@ -41,6 +42,7 @@ print('optimizer & scheduler created')
 best_train_loss = np.inf
 best_valid_loss = np.inf
 history = defaultdict(list)
+isFrz = 'frz' if model.isFreeze else 'unfrz'
 for epoch in range(cfg.EPOCHS):
     train_loss = train_fn(train_dataloader, model, optimizer, scheduler=None)
     valid_loss = eval_fn(valid_dataloader, model)
@@ -48,12 +50,15 @@ for epoch in range(cfg.EPOCHS):
     history['valid_loss'].append(valid_loss)
 
     print(f"EPOCH = {epoch} \t train_loss = {train_loss} \t valid_loss = {valid_loss}")
-
-    isFrz = 'frz' if model.isFreeze else 'unfrz'
+    
     filename = f'{model.model_name}_{isFrz}_epo{epoch}_batch{cfg.BATCH_SIZE}_lr{str(cfg.LR)}'
-    if train_loss < best_train_loss:
-        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{filename}_train.pt'))
-        best_train_loss = train_loss
-    if valid_loss < best_valid_loss:
-        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{filename}_valid.pt'))
-        best_valid_loss = valid_loss
+    if train_loss < best_train_loss or valid_loss < best_valid_loss:
+        torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{filename}.pt'))
+    
+    best_train_loss = train_loss if train_loss < best_train_loss else best_train_loss
+    best_valid_loss = valid_loss if valid_loss < best_valid_loss else best_valid_loss
+
+    gc.collect()    # garbage collector consumes lots of time
+    torch.cuda.empty_cache()
+
+save_train_log(model, history)

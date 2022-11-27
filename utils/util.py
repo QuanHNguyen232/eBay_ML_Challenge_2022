@@ -82,3 +82,14 @@ def emoji_remove(text):
         u"\u3030"
         "]+", re.UNICODE)
     return emoji_pattern.sub(r'-', text)
+
+def save_train_log(model, history):
+    filename = os.path.join(cfg.train_log_path, f'{model.model_name}_train-log.txt')
+    if not os.path.exists(filename):
+        with open(filename, 'w') as file:
+            file.writelines(f'EPOCH={e} \t train_loss={train} \t valid_loss = {valid}\n' for e, (train, valid) in enumerate(zip(history['train_loss'], history['valid_loss'])))
+    else:
+        with open(filename, 'a') as file:
+            file.write('\n')
+            for e, (train, valid) in enumerate(zip(history['train_loss'], history['valid_loss'])):
+                file.writelines(f'EPOCH={e} \t train_loss={train} \t valid_loss = {valid}')

@@ -1,4 +1,3 @@
-import gc
 import torch
 
 import transformers
@@ -30,8 +29,6 @@ def train_fn(data_loader, model, optimizer, scheduler=None):
         total_loss += loss.item()
         
         del data
-        gc.collect()
-        torch.cuda.empty_cache()
     
     return total_loss / len(data_loader)
 
@@ -46,7 +43,5 @@ def eval_fn(data_loader, model):
             total_loss += loss.item()
             
             del data
-            gc.collect()
-            torch.cuda.empty_cache()
     
     return total_loss / len(data_loader)
