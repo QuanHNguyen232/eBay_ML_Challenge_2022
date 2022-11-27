@@ -12,7 +12,7 @@ class BERTModel(torch.nn.Module):
   def __init__(self, num_labels, isFreeze=True):
     super(BERTModel, self).__init__()
     self.num_labels = num_labels
-    self.model_name = 'bert'
+    self.model_name = 'roberta'
     self.isFreeze = isFreeze
 
     self.bert = transformers.BertModel.from_pretrained(cfg.MODEL.RoBERTa_ver)
@@ -52,8 +52,8 @@ class RoBERTa_BiLSTM_Model(torch.nn.Module):
     self.bert_cfg = transformers.BertConfig.from_pretrained(cfg.MODEL.RoBERTa_ver)
 
     self.roberta = transformers.BertModel.from_pretrained(cfg.MODEL.RoBERTa_ver)
-    self.drop1 = torch.nn.Dropout(0.3)
-    self.drop2 = torch.nn.Dropout(0.3)
+    self.drop1 = torch.nn.Dropout(0.5)
+    self.drop2 = torch.nn.Dropout(0.5)
     self.bilstm = torch.nn.LSTM(self.bert_cfg.hidden_size, lstm_hidden_dim // 2, num_layers=2, bidirectional=True, dropout=0.1, batch_first=True)
     self.linear1 = torch.nn.Linear(lstm_hidden_dim, self.num_labels)  # get output of last layer (before tanh) = 768
 

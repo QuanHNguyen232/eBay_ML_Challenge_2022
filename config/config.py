@@ -4,16 +4,16 @@ from sklearn.preprocessing import LabelEncoder
 
 DATA_DIR = '../data/eBay_ML_Challenge_Dataset_2022'
 TRAIN_DATA = 'Train_Tagged_Titles.tsv'
-DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+DEVICE = 'cpu' if torch.cuda.is_available() else 'cpu'
 SAVED_MODEL_DIR = '../saved/models'
 
-EPOCHS = 100
+EPOCHS = 50
 BATCH_SIZE = 32
 LR = 1e-4
-num_warmup_steps = 5
+num_warmup_steps = 0
 
 encode_tag = LabelEncoder()
-split_pt = 4000
+split_pt = 4500
 
 class TOKENIZER:
     Token_BERT_ver = 'bert-base-uncased'

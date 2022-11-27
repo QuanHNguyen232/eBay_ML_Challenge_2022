@@ -28,9 +28,9 @@ train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=cfg.BAT
 valid_dataloader = torch.utils.data.DataLoader(valid_dataset, batch_size=cfg.BATCH_SIZE)
 print('dataloader created')
 
-# model = models.BERTModel(num_tags, isFreeze=False)
+model = models.BERTModel(num_tags, isFreeze=False)
 # model = models.RoBERTa_BiLSTM_CRF_Model(num_tags)
-model = models.RoBERTa_BiLSTM_Model(num_tags, isFreeze=False)
+# model = models.RoBERTa_BiLSTM_Model(num_tags, isFreeze=False)
 model = model.to(cfg.DEVICE)
 print('model created')
 
