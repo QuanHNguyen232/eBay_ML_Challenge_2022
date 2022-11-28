@@ -12,6 +12,8 @@ import transformers
 import sys
 sys.path.append('../')
 import config.config as cfg
+from dataset import dataset
+import utils.util as util
 
 #%%
 file_path = os.path.join(cfg.DATA_DIR, cfg.TRAIN_DATA)
@@ -40,11 +42,25 @@ df["Tag"].value_counts().plot(kind="bar", figsize=(10,5));
 word_counts = df.groupby("Record Number")["Token"].agg(["count"])
 word_counts.hist(bins=50, figsize=(8,6));
 
-#%%
-def test_file():
-    print('file test/EDA.py')
 
+#%% #########################
+########### RUN TEST ########
+#############################
+#%%
+sent_ids, sentences, labels = util.get_quiz()
+_ = util.get_data()
+#%%
+sent_ids[0], sentences[0]
+#%%
+train_dataset = dataset.QuizDataset(sent_ids, sentences)
+trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=1)
 
 #%%
-model = transformers.BertModel.from_pretrained('Jean-Baptiste/roberta-large-ner-english')
-model
+data = train_dataset[9]
+data['sent_id'], data['sent_id'].shape, data['input_ids'].shape
+
+#%%
+for data in trainloader:
+    print(data['input_ids'].shape)
+    break
+#%%

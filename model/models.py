@@ -28,7 +28,7 @@ class BERTModel(torch.nn.Module):
       for param in self.bert.parameters():
         param.requires_grad = False
 
-  def forward(self, ids, masks, token_type_ids, target_tags):
+  def forward(self, ids, masks, token_type_ids, target_tags=None):
     '''
     bert ids, masks, type_ids must have shape (BATCH_SIZE, MAX_SIZE)
     '''
@@ -39,9 +39,11 @@ class BERTModel(torch.nn.Module):
     out = self.drop2(out)
     out = self.linear2(out)
     
-    loss = losses.loss_fn(out, target_tags, masks, self.num_labels)
+    if target_tags != None:
+      loss = losses.loss_fn(out, target_tags, masks, self.num_labels)
+      return out, loss
     
-    return out, loss
+    return out
 
 class RoBERTa_BiLSTM_Model(torch.nn.Module):
   def __init__(self, num_labels, isFreeze=False, lstm_hidden_dim=256):
@@ -61,16 +63,18 @@ class RoBERTa_BiLSTM_Model(torch.nn.Module):
       for param in self.roberta.parameters():
         param.requires_grad = False
 
-  def forward(self, ids, masks, token_type_ids, target_tags):
+  def forward(self, ids, masks, token_type_ids, target_tags=None):
     out = self.roberta(ids, attention_mask=masks, token_type_ids=token_type_ids)
     out = self.drop1(out.last_hidden_state)
     out, _ = self.bilstm(out)
     out = self.drop2(out)
     out = self.linear1(out)
     
-    loss = losses.loss_fn(out, target_tags, masks, self.num_labels)
+    if target_tags != None:
+      loss = losses.loss_fn(out, target_tags, masks, self.num_labels)
+      return out, loss
 
-    return out, loss
+    return out
 
 
 
