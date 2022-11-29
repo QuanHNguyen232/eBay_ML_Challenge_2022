@@ -45,6 +45,35 @@ class BERTModel(torch.nn.Module):
     
     return out
 
+class BERTModel_1(torch.nn.Module):
+  def __init__(self, num_labels, isFreeze=True):
+    super(BERTModel_1, self).__init__()
+    self.num_labels = num_labels
+    self.model_name = 'bert'
+    self.isFreeze = isFreeze
+
+    self.bert = transformers.BertModel.from_pretrained(cfg.MODEL.BERT_ver)
+    self.bert_drop = torch.nn.Dropout(0.3)
+    self.bert_linear = torch.nn.Linear(list(self.bert.modules())[-2].out_features, self.num_labels)  # get output of last layer (before tanh) = 768
+
+    if self.isFreeze:
+      for param in self.bert.parameters():
+        param.requires_grad = False
+
+  def forward(self, ids, masks, token_type_ids, target_tags=None):
+    '''
+    bert ids, masks, type_ids must have shape (BATCH_SIZE, MAX_SIZE)
+    '''
+    out = self.bert(ids, attention_mask=masks, token_type_ids=token_type_ids)
+    out = self.bert_drop(out.last_hidden_state)
+    out = self.bert_linear(out)
+    
+    if target_tags != None:
+      loss = losses.loss_fn(out, target_tags, masks, self.num_labels)
+      return out, loss
+    
+    return out
+
 class RoBERTa_BiLSTM_Model(torch.nn.Module):
   def __init__(self, num_labels, isFreeze=False, lstm_hidden_dim=256):
     super(RoBERTa_BiLSTM_Model, self).__init__()

@@ -32,9 +32,10 @@ tokenizer = transformers.BertTokenizerFast.from_pretrained(cfg.TOKENIZER.Token_B
 print('tkzer created')
 
 #%%
+model = models.BERTModel_1(num_tags)
 # model = models.RoBERTa_BiLSTM_Model(num_tags, isFreeze=True)
-model = models.BERTModel(num_tags)
-model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'roberta_frz_epo22_batch32_lr0.001_valid.pt')))
+# model = models.BERTModel(num_tags)
+model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'bert_epoch2_bacth32_best_valid.pt')))
 model = model.to(cfg.DEVICE)
 print('model created')
 
@@ -129,62 +130,76 @@ with torch.no_grad():
 gc.collect()
 torch.cuda.empty_cache()
 
+#%%
 df = pd.DataFrame(data={
                     'Record Number': return_sent_id,
                     'Aspect Name': return_tag,
                     'Aspect Value': return_sent
                 })
-df.to_csv(os.path.join(cfg.SAVED_SUBMIT_DIR, 'submit3.tsv'), sep='\t' , header=False, index=False, quoting=csv.QUOTE_NONE)
+df.to_csv(os.path.join(cfg.SAVED_SUBMIT_DIR, 'submit4.tsv'), sep='\t' , header=False, index=False, quoting=csv.QUOTE_NONE)
 
-#%% EVALUATION
+#%% 
+##################### EVALUATION #########################
+##########################################################
+#%%
+sentences, labels, tags, label2id, id2label = get_data()
+sentences, labels, tags = sentences[cfg.split_pt:], labels[cfg.split_pt:], tags[cfg.split_pt:]
+num_tags = len(list(cfg.encode_tag.classes_))
 
-# names = [f'roberta_unfrz_epoch{i}_batch32_train' for i in range(5, 21)]
-# for name in names:
-#     model = models.BERTModel(num_tags)
-    # model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, f'{name}.pt')))
-    # model = model.to(cfg.DEVICE)
-    # model.eval()
+#%%
+dataset = MyDataset(sentences, labels)
+dataloader = torch.utils.data.DataLoader(dataset, batch_size=1)
 
-    # sum_f1_macro = 0.0
-    # sum_f1_micro = 0.0
-    # with torch.no_grad():
-    #     for data in dataloader:
-    #         out, loss = model(data['input_ids'],
-    #                         data['attention_mask'],
-    #                         data['token_type_ids'],
-    #                         data['target_tag'])
-            
-#             # print(data['input_ids'].shape,
-#             #         data['attention_mask'].shape,
-#             #         data['target_tag'].shape,
-#             #         out.shape)   # [1, 64]
+#%%
+model = models.BERTModel_1(32)
+# model = models.BERTModel(num_tags)
+model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'bert_epoch2_bacth32_best_valid.pt')))
+model = model.to(cfg.DEVICE)
+print('model created')
 
-#             mask = data['target_tag'].view(-1) != -100
-#             active_gt = torch.where(
-#                 mask,
-#                 data['target_tag'].view(-1),
-#                 torch.tensor(cfg.encode_tag.transform(np.array(['No Tag']))[0]).type_as(data['target_tag'])
-#             )
+#%%
 
-#             gt = active_gt.cpu().numpy().reshape(-1)
-#             pred = out.argmax(2).cpu().numpy().reshape(-1)
+sum_f1_macro = 0.0
+sum_f1_micro = 0.0
+with torch.no_grad():
+    model.eval()
+    for data in tqdm(dataloader):
+        out = model(data['input_ids'],
+                        data['attention_mask'],
+                        data['token_type_ids'])
+        
+        # print(data['input_ids'].shape,
+        #         data['attention_mask'].shape,
+        #         data['target_tag'].shape,
+        #         out.shape)   # [1, seq_len]
+        
+        mask = data['target_tag'].view(-1) != -100
+        active_gt = torch.where(
+            mask,
+            data['target_tag'].view(-1),
+            torch.tensor(cfg.encode_tag.transform(np.array(['No Tag']))[0]).type_as(data['target_tag'])
+        )
 
-#             gt_tag = cfg.encode_tag.inverse_transform(gt)
-#             pred_tag = cfg.encode_tag.inverse_transform(pred)
-            
-#             y_true = []
-#             y_pred = []
-#             for y, y_hat, attention in zip(gt, pred, data['attention_mask'].view(-1)):
-#                 if attention == 1:
-#                     y_true.append(y)
-#                     y_pred.append(y_hat)
-            
-#             y_true, y_pred = np.array(y_true), np.array(y_pred)
-#             sum_f1_macro += f1_score(y_true, y_pred, average='macro')
-#             sum_f1_micro += f1_score(y_true, y_pred, average='micro')
+        gt = active_gt.detach().cpu().numpy().reshape(-1)
+        pred = out.argmax(2).detach().cpu().numpy().reshape(-1)
 
-#         print(name)
-#         print(f'avg f1_macro: {sum_f1_macro/len(dataloader)}')
-#         print(f'avg f1_micro: {sum_f1_micro/len(dataloader)}')
-#         print()
+        gt_tag = cfg.encode_tag.inverse_transform(gt)
+        pred_tag = cfg.encode_tag.inverse_transform(pred)
+        
+        y_true = []
+        y_pred = []
+        for y, y_hat, attention in zip(gt, pred, data['attention_mask'].view(-1)):
+            if attention == 1:
+                y_true.append(y)
+                y_pred.append(y_hat)
+        
+        
+        y_true, y_pred = np.array(y_true), np.array(y_pred)
+        sum_f1_macro += f1_score(y_true, y_pred, average='macro')
+        sum_f1_micro += f1_score(y_true, y_pred, average='micro')
+
+    print(model.model_name)
+    print(f'avg f1_macro: {sum_f1_macro/len(dataloader)}')
+    print(f'avg f1_micro: {sum_f1_micro/len(dataloader)}')
+    print()
 

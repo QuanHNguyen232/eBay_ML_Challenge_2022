@@ -2,9 +2,14 @@
 
 Team *qua_n_lity__23_v2*
 
+**Note**:
+> LoL, I have no idea why RoBERTa-BiLSTM and RoBERTa (or BERTModel in models) have worse performance than BERTModel_1, which is a simple model. It was trained on just around 50epochs while the other 2 were trained for >100 epochs (based on f1-score w/ scikit-learn) and their loss (CrossEntropy) are lower, too. 
 
+> What caused that? *My guess: maybe those 2 are too big for this small amount of data???*
+> * a small change: special_tk_tag = -100 instead of 19 (or 'No Tag') from `dataset`
 
 Best (trained on 4500 sentences + batch 32):
+1. BERT: `bert_epoch2_bacth32_best_valid.pt`: f1 = 0.7227390454084825
 1. Roberta: (sum=66epoches(lr0.0001) + 28epoches(lr0.0003) + 23epoches(lr0.001 | train_loss = 2.143281674554162 | valid_loss = 1.8781160786747932)
     * `roberta_frz_epo22_batch32_lr0.001_valid.pt`: f1= 0.27955444513192473 (submit3.tsv)
 

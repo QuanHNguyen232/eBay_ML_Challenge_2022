@@ -11,7 +11,7 @@ import model.models as models
 from utils.util import get_data
 from model.metrics import get_optimizer_scheduler
 from dataset.dataset import MyDataset
-from testing.engine import train_fn, eval_fn
+from working.engine import train_fn, eval_fn
 
 sentences, labels, tags, label2id, id2label = get_data()
 num_tags = len(list(cfg.encode_tag.classes_))
