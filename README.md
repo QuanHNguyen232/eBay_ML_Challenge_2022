@@ -3,13 +3,22 @@
 Team *qua_n_lity__23_v2*
 
 **Note**:
-> LoL, I have no idea why RoBERTa-BiLSTM and RoBERTa (or BERTModel in models) have worse performance than BERTModel_1, which is a simple model. It was trained on just around 50epochs while the other 2 were trained for >100 epochs (based on f1-score w/ scikit-learn) and their loss (CrossEntropy) are lower, too. 
+> LoL, I have no idea why RoBERTa-BiLSTM and RoBERTa (or BERTModel in models) have worse performance than BERTModel_1, which is a simple model. It was trained on just around 50epochs while the other 2 were trained for >100 epochs (based on f1-score w/ scikit-learn). 
 
 > What caused that? *My guess: maybe those 2 are too big for this small amount of data???*
 > * a small change: special_tk_tag = -100 instead of 19 (or 'No Tag') from `dataset`
+> * Looks like BERT architecture does not compatible with RoBERTa weighs (HuggingFace)
+
+> It seems that eBay use f1_score w/ "macro" average method (scikit-learn)
+
+> It seems that at 1 Dense into BERTModel_1 w/ Dropout also worsen its performance. Why???
 
 Best (trained on 4500 sentences + batch 32):
-1. BERT: `bert_epoch2_bacth32_best_valid.pt`: f1 = 0.7227390454084825
+1. BERT: (+100epochs(lr=0.0001) | train_loss = 0.31007204780764613 | valid_loss = 0.47431010054424405 | drop0.3)
+    * `bert_frz_batch16_lr0.0003_drop0_best.pt`: f1 = 0.7294293104312051
+    * `bert_frz_batch16_lr0.0001_best.pt` (+100epochs | train_loss = 0.2514377393964546 | valid_loss = 0.4743043603375554 | pred_f1: 0.7947825545874665): f1 = 0.7294870919638072
+    * `bert_epoch2_bacth32_best_valid.pt`: f1 = 0.7227390454084825
+
 1. Roberta: (sum=66epoches(lr0.0001) + 28epoches(lr0.0003) + 23epoches(lr0.001 | train_loss = 2.143281674554162 | valid_loss = 1.8781160786747932)
     * `roberta_frz_epo22_batch32_lr0.001_valid.pt`: f1= 0.27955444513192473 (submit3.tsv)
 

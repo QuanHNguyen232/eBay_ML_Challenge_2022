@@ -53,7 +53,7 @@ class BERTModel_1(torch.nn.Module):
     self.isFreeze = isFreeze
 
     self.bert = transformers.BertModel.from_pretrained(cfg.MODEL.BERT_ver)
-    self.bert_drop = torch.nn.Dropout(0.3)
+    self.bert_drop = torch.nn.Dropout(0.05)
     self.bert_linear = torch.nn.Linear(list(self.bert.modules())[-2].out_features, self.num_labels)  # get output of last layer (before tanh) = 768
 
     if self.isFreeze:

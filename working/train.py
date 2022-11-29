@@ -31,8 +31,9 @@ print('dataloader created')
 
 # model = models.BERTModel(num_tags, isFreeze=True)
 # model = models.RoBERTa_BiLSTM_CRF_Model(num_tags)
-model = models.RoBERTa_BiLSTM_Model(num_tags, isFreeze=True)
-model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'roberta-bilstm_frz_batch16_lr0.0001_epo198_best.pt')))
+# model = models.RoBERTa_BiLSTM_Model(num_tags, isFreeze=True)
+model = models.BERTModel_1(num_tags, isFreeze=True)
+model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'bert_frz_batch16_lr3e-05_best.pt')))
 model = model.to(cfg.DEVICE)
 print('model created')
 
@@ -52,14 +53,16 @@ for epoch in range(cfg.EPOCHS):
 
     print(f"EPOCH = {epoch} \t train_loss = {train_loss} \t valid_loss = {valid_loss}")
     
-    filename = f'{model.model_name}_{isFrz}_epo{epoch}_batch{cfg.BATCH_SIZE}_lr{str(cfg.LR)}'
+    filename = f'{model.model_name}_{isFrz}_batch{cfg.BATCH_SIZE}_lr{str(cfg.LR)}_best'
     if train_loss < best_train_loss or valid_loss < best_valid_loss:
         torch.save(model.state_dict(), os.path.join(cfg.SAVED_MODEL_DIR, f'{filename}.pt'))
+        print(f'SAVED MODEL -- epoch={epoch}')
     
     best_train_loss = train_loss if train_loss < best_train_loss else best_train_loss
     best_valid_loss = valid_loss if valid_loss < best_valid_loss else best_valid_loss
 
-gc.collect()    # garbage collector consumes lots of time
-torch.cuda.empty_cache()
+    if epoch%10 == 0:
+        gc.collect()    # garbage collector consumes lots of time
+        torch.cuda.empty_cache()
 
 # save_train_log(model, history)

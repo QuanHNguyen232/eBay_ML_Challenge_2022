@@ -35,7 +35,7 @@ print('tkzer created')
 model = models.BERTModel_1(num_tags)
 # model = models.RoBERTa_BiLSTM_Model(num_tags, isFreeze=True)
 # model = models.BERTModel(num_tags)
-model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'bert_epoch2_bacth32_best_valid.pt')))
+model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'bert_frz_batch16_lr0.0001_best.pt')))
 model = model.to(cfg.DEVICE)
 print('model created')
 
@@ -136,7 +136,7 @@ df = pd.DataFrame(data={
                     'Aspect Name': return_tag,
                     'Aspect Value': return_sent
                 })
-df.to_csv(os.path.join(cfg.SAVED_SUBMIT_DIR, 'submit4.tsv'), sep='\t' , header=False, index=False, quoting=csv.QUOTE_NONE)
+df.to_csv(os.path.join(cfg.SAVED_SUBMIT_DIR, 'submit6.tsv'), sep='\t' , header=False, index=False, quoting=csv.QUOTE_NONE)
 
 #%% 
 ##################### EVALUATION #########################
@@ -153,7 +153,7 @@ dataloader = torch.utils.data.DataLoader(dataset, batch_size=1)
 #%%
 model = models.BERTModel_1(32)
 # model = models.BERTModel(num_tags)
-model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'bert_epoch2_bacth32_best_valid.pt')))
+model.load_state_dict(torch.load(os.path.join(cfg.SAVED_MODEL_DIR, 'bert_frz_batch16_lr0.0001_best.pt')))
 model = model.to(cfg.DEVICE)
 print('model created')
 
